@@ -1,10 +1,6 @@
 # LiteLLM with Google Spanner & Gemini Integration
 
-A production-ready LiteLLM proxy server with Google Cloud Spanner for token management and Gemini AI integration, optimized for Red Hat Enterprise Linux.
-
-[![CI](https://github.com/yourusername/litellm-spanner-gemini/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/litellm-spanner-gemini/actions/workflows/ci.yml)
-[![Security](https://github.com/yourusername/litellm-spanner-gemini/actions/workflows/security.yml/badge.svg)](https://github.com/yourusername/litellm-spanner-gemini/actions/workflows/security.yml)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+**Not tested for production. Proceed after thorough testing**
 
 ## Features
 
