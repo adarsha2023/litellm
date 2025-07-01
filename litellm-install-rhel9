@@ -1,6 +1,6 @@
 # Python 3.13 + LiteLLM Installation Commands for RHEL 9
 
-## Method 1: Source Compilation (Recommended)
+## Source Compilation (Recommended)
 
 ### Install Dependencies
 ```bash
@@ -9,41 +9,7 @@ sudo dnf groupinstall -y "Development Tools"
 sudo dnf install -y gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel readline-devel sqlite-devel tk-devel xz-devel wget curl git
 ```
 
-### Download and Compile Python 3.13
-```bash
-cd /tmp
-wget https://www.python.org/ftp/python/3.13.1/Python-3.13.1.tgz
-tar xzf Python-3.13.1.tgz
-cd Python-3.13.1
-./configure --enable-optimizations --enable-shared --with-ensurepip=install --prefix=/usr/local
-make -j $(nproc)
-sudo make altinstall
-```
-
-### Configure System
-```bash
-# Add to library path
-echo '/usr/local/lib' | sudo tee /etc/ld.so.conf.d/python313.conf
-sudo ldconfig
-
-# Create symlinks (optional)
-sudo ln -sf /usr/local/bin/python3.13 /usr/local/bin/python313
-sudo ln -sf /usr/local/bin/pip3.13 /usr/local/bin/pip313
-```
-
-### Install LiteLLM
-```bash
-/usr/local/bin/python3.13 -m pip install --upgrade pip
-/usr/local/bin/python3.13 -m pip install litellm
-
-# Or with virtual environment
-/usr/local/bin/python3.13 -m venv ~/litellm-env
-source ~/litellm-env/bin/activate
-pip install --upgrade pip
-pip install litellm
-```
-
-## Method 2: Using pyenv
+## Method 1: Using pyenv
 
 ### Install pyenv Dependencies
 ```bash
@@ -73,7 +39,7 @@ pyenv global 3.13.1
 pip install --upgrade pip
 pip install litellm
 
-# Or with virtual environment
+# Or with virtual environment (recommended)
 python -m venv litellm-env
 source litellm-env/bin/activate
 pip install --upgrade pip
