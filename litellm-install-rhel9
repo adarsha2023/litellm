@@ -1,0 +1,148 @@
+# Python 3.13 + LiteLLM Installation Commands for RHEL 9
+
+## Method 1: Source Compilation (Recommended)
+
+### Install Dependencies
+```bash
+sudo dnf makecache --refresh
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y gcc gcc-c++ make openssl-devel bzip2-devel libffi-devel zlib-devel readline-devel sqlite-devel tk-devel xz-devel wget curl git
+```
+
+### Download and Compile Python 3.13
+```bash
+cd /tmp
+wget https://www.python.org/ftp/python/3.13.1/Python-3.13.1.tgz
+tar xzf Python-3.13.1.tgz
+cd Python-3.13.1
+./configure --enable-optimizations --enable-shared --with-ensurepip=install --prefix=/usr/local
+make -j $(nproc)
+sudo make altinstall
+```
+
+### Configure System
+```bash
+# Add to library path
+echo '/usr/local/lib' | sudo tee /etc/ld.so.conf.d/python313.conf
+sudo ldconfig
+
+# Create symlinks (optional)
+sudo ln -sf /usr/local/bin/python3.13 /usr/local/bin/python313
+sudo ln -sf /usr/local/bin/pip3.13 /usr/local/bin/pip313
+```
+
+### Install LiteLLM
+```bash
+/usr/local/bin/python3.13 -m pip install --upgrade pip
+/usr/local/bin/python3.13 -m pip install litellm
+
+# Or with virtual environment
+/usr/local/bin/python3.13 -m venv ~/litellm-env
+source ~/litellm-env/bin/activate
+pip install --upgrade pip
+pip install litellm
+```
+
+## Method 2: Using pyenv
+
+### Install pyenv Dependencies
+```bash
+sudo dnf groupinstall -y "Development Tools"
+sudo dnf install -y gcc zlib-devel bzip2-devel readline-devel sqlite-devel openssl-devel tk-devel libffi-devel xz-devel git curl
+```
+
+### Install pyenv
+```bash
+curl https://pyenv.run | bash
+
+# Add to shell profile
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Install Python 3.13 with pyenv
+```bash
+pyenv install 3.13.1
+pyenv global 3.13.1
+```
+
+### Install LiteLLM
+```bash
+pip install --upgrade pip
+pip install litellm
+
+# Or with virtual environment
+python -m venv litellm-env
+source litellm-env/bin/activate
+pip install --upgrade pip
+pip install litellm
+```
+
+## Verification Commands
+
+```bash
+# Check Python version
+python3.13 --version
+
+# Check LiteLLM installation
+python3.13 -c "import litellm; print(f'LiteLLM version: {litellm.__version__}')"
+
+# Check LiteLLM CLI
+litellm --version
+
+# Test basic functionality
+python3.13 -c "
+import litellm
+response = litellm.completion(
+    model='gpt-3.5-turbo',
+    messages=[{'role': 'user', 'content': 'Hello'}],
+    mock_response='Hello from LiteLLM!'
+)
+print('LiteLLM test successful!')
+"
+```
+
+## Environment Setup (Optional)
+
+Add to `~/.bashrc` for easier access:
+```bash
+echo 'export PATH="/usr/local/bin:$PATH"' >> ~/.bashrc
+echo 'alias python313="/usr/local/bin/python3.13"' >> ~/.bashrc
+echo 'alias pip313="/usr/local/bin/pip3.13"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+## Cleanup Commands
+
+```bash
+# Remove build files
+rm -rf /tmp/Python-3.13.1*
+
+# If you need to uninstall (source method)
+sudo rm -rf /usr/local/bin/python3.13*
+sudo rm -rf /usr/local/bin/pip3.13*
+sudo rm -rf /usr/local/lib/python3.13
+sudo rm -f /etc/ld.so.conf.d/python313.conf
+sudo ldconfig
+
+# If you need to uninstall pyenv
+rm -rf ~/.pyenv
+# Remove pyenv lines from ~/.bashrc
+```
+
+## Troubleshooting
+
+### Common Issues
+```bash
+# If SSL certificate verification fails
+pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org litellm
+
+# If shared library errors occur
+sudo ldconfig
+export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+# Check for missing dependencies
+ldd /usr/local/bin/python3.13
+```
