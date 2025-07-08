@@ -1,0 +1,5 @@
+# Activate your virtual environment
+source litellm-env/bin/activate
+
+# Install SQLAlchemy Spanner dialect
+pip install sqlalchemy-spanner sqlalchemy>=2.0.0
