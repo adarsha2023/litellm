@@ -12,3 +12,4 @@
 - Google Cloud Project with billing enabled
 - Gemini API key
 - Google Spanner
+- SQL Alchemy
