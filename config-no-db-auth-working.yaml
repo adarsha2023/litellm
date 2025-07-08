@@ -1,0 +1,23 @@
+model_list:
+  - model_name: gemini-flash
+    litellm_params:
+      model: gemini/gemini-1.5-flash
+      api_key: os.environ/GEMINI_API_KEY
+  
+  - model_name: gemini-pro
+    litellm_params:
+      model: gemini/gemini-1.5-pro
+      api_key: os.environ/GEMINI_API_KEY
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  port: 4000
+  ui: true
+  set_verbose: true
+  
+  # Keep the database-free settings that work
+  disable_database_logs: true
+  allow_requests_on_db_unavailable: true
+
+router_settings:
+  routing_strategy: "simple-shuffle"
